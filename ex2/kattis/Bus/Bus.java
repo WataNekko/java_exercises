@@ -9,6 +9,8 @@ public class Bus {
         for (int i = 0; i < n; i++) {
             System.out.println(getNumOfPassengers(scanner.nextInt()));
         }
+
+        scanner.close();
     }
 
     static int getNumOfPassengers(int numOfStops) {
