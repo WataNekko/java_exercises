@@ -8,6 +8,8 @@ public class Plania {
         int n = scanner.nextInt();
         int tmp = getNumSidePointsStored(n);
         System.out.println(tmp * tmp);
+
+        scanner.close();
     }
 
     static int getNumSidePointsStored(int i) {

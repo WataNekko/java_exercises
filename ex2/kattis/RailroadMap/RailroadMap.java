@@ -1,111 +1,88 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RailroadMap {
 
-    static Station[] stations;
-
-    static class Station {
-        ArrayList<Railroad> to;
-        Railroad from;
-
-        Station() {
-            this.to = new ArrayList<>();
-        }
-
-        boolean isRemovable() {
-            // exactly one incoming and one outgoing edge
-            return this.to.size() == 1 && Railroad.isValid(this.from);
-        }
-
-        void remove() {
-            var to = this.to.get(0);
-            this.from.length += to.length;
-            this.from.b = to.b;
-            if (Railroad.isValid(stations[to.b].from)) {
-                stations[to.b].from = this.from;
-            }
-
-            this.from = null;
-            this.to.clear();
-        }
-    }
-
     static class Railroad {
-        int a;
-        int b;
+        final int[] ss; // stations that the railroad connects
         int length;
 
         Railroad(int a, int b, int length) {
-            this.a = a;
-            this.b = b;
+            this.ss = new int[] { a, b };
             this.length = length;
         }
-
-        static boolean isValid(Railroad road) {
-            return road != null && road.length >= 0;
-        }
-
-        void print() {
-            System.out.println((this.a + 1) + " " + (this.b + 1) + " " + this.length);
-        }
     }
-
-    final static Railroad invalidRoad = new Railroad(-1, -1, -1);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int t = scanner.nextInt();
         for (int i = 0; i < t; i++) {
+            // for each test case
             int stationCount = scanner.nextInt();
             int railroadCount = scanner.nextInt();
 
-            stations = new Station[stationCount];
+            // used to store railroad segments
+            Railroad[] roads = new Railroad[railroadCount];
+
+            // used to store the number of occurences of a station
+            int[] occurenceCountArr = new int[stationCount];
+
+            // store the first occurence of a station for later removal of
+            // that station if the number of occurences of that station is 2
+            int[] firstOccurenceArr = new int[stationCount];
+
             for (int j = 0; j < railroadCount; j++) {
-                int a = scanner.nextInt() - 1;
-                int b = scanner.nextInt() - 1;
-                int length = scanner.nextInt();
+                // input railroads
+                var road = new Railroad(
+                        scanner.nextInt() - 1,
+                        scanner.nextInt() - 1,
+                        scanner.nextInt());
+                roads[j] = road;
 
-                if (stations[a] == null) {
-                    // init
-                    stations[a] = new Station();
-                }
-                if (stations[b] == null) {
-                    // init
-                    stations[b] = new Station();
-                }
-
-                Railroad road = new Railroad(a, b, length);
-
-                stations[a].to.add(road);
-                if (stations[b].from == null) {
-                    // uninitialized -> add one incoming edge
-                    stations[b].from = road;
-                } else {
-                    // more than one incoming edge -> mark as invalid for removal
-                    stations[b].from = invalidRoad;
-                }
-            } // input railroads
-
-            for (int j = 0; j < stationCount; j++) {
-                // remove redundant stations
-                if (stations[j].isRemovable()) {
-                    stations[j].remove();
-                    stations[j] = null;
-                    railroadCount--;
+                for (int k = 0; k < 2; k++) {
+                    int s = road.ss[k];
+                    if (++occurenceCountArr[s] == 1) {
+                        firstOccurenceArr[s] = j;
+                    }
                 }
             }
 
-            // output
-            System.out.println(railroadCount);
+            int newRailroadCount = railroadCount;
+            for (int j = railroadCount - 1; j >= 0; j--) {
+                // removal of stations
+                var road = roads[j];
 
-            for (var station : stations) {
-                if (station == null)
-                    continue;
+                for (int k = 0; k < 2; k++) {
+                    int s = road.ss[k];
 
-                for (var road : station.to) {
-                    road.print();
+                    if (occurenceCountArr[s] == 2) {
+                        // remove station `s`
+                        int s_ = road.ss[(k + 1) % 2]; // the other station
+                        int firstIndex = firstOccurenceArr[s];
+                        Railroad first = roads[firstIndex];
+
+                        replace(first.ss, s, s_);
+                        first.length += road.length;
+                        road.length = 0; // mark as invalid (removed)
+
+                        firstOccurenceArr[s_] = Math.min(
+                                firstOccurenceArr[s_],
+                                firstIndex); // update first occurence index for `s_`
+
+                        newRailroadCount--;
+
+                        break;
+                    }
+                }
+            }
+
+            System.out.println(newRailroadCount);
+            for (int j = 0; j < railroadCount; j++) {
+                // output result
+                var road = roads[j];
+
+                if (road.length > 0) {
+                    System.out.println((road.ss[0] + 1) + " " + (road.ss[1] + 1) + " " + road.length);
                 }
             }
             System.out.println();
@@ -113,6 +90,15 @@ public class RailroadMap {
         } // test cases
 
         scanner.close();
+    }
+
+    static void replace(int[] arr, int a, int withB) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == a) {
+                arr[i] = withB;
+                return;
+            }
+        }
     }
 
 }
