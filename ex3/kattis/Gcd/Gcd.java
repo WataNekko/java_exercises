@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -11,26 +11,29 @@ public class Gcd {
             return gcd(b, Math.abs(a - b));
     }
 
+    static ArrayList<Integer> gcd(ArrayList<Integer> list) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 1; i < list.size(); i++) {
+            set.add(gcd(list.get(i - 1), list.get(i)));
+        }
+        return new ArrayList<>(set);
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int n = scanner.nextInt();
-        HashSet<Integer> gcd = new HashSet<>();
 
-        int[] arr = new int[n];
+        ArrayList<Integer> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            arr[i] = scanner.nextInt();
+            list.add(scanner.nextInt());
         }
         scanner.close();
 
-        for (int i = 0; i < n; i++) {
-            var tmp = arr[i];
-            gcd.add(tmp);
-
-            for (int j = i + 1; j < n; j++) {
-                tmp = gcd(tmp, arr[j]);
-                gcd.add(tmp);
-            }
+        HashSet<Integer> gcd = new HashSet<>(list);
+        while (list.size() > 1) {
+            list = gcd(list);
+            gcd.addAll(list);
         }
 
         System.out.println(gcd.size());
