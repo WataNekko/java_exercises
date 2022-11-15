@@ -27,11 +27,10 @@ public class Bacon {
                     .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
                     .forEach(entry -> {
                         System.out.println(
-                                entry.getKey() + " " + String.join(" ",
-                                        entry.getValue()
-                                                .stream()
-                                                .sorted()
-                                                .collect(Collectors.joining(" "))));
+                                entry.getKey() + " " + entry.getValue()
+                                        .stream()
+                                        .sorted()
+                                        .collect(Collectors.joining(" ")));
                     });
             System.out.println();
         }
