@@ -1,0 +1,66 @@
+1. What does the following expression evaluate to?
+"I dislike Java :(".substring(2).equals("My friends dislike Java :(".substring(11, 25))
+a) true
+b) false
+c) error
+
+2. What is the compiler feature that supports the following code?
+Integer a = 1;
+Integer b = a + 1;
+a) No compiler feature
+b) Autounboxing
+c) Autoboxing
+
+3. What does the `Math.max` function do?
+a) returns the larger of the 2 input numbers
+b) returns the maximum value that a variable can hold
+c) returns the index of the maximum number in an array
+
+4. Difference between StringBuilder and StringBuffer?
+a) No difference
+b) One is thread safe
+c) One is faster
+d) StringBuffer is a newer feature
+
+5. How to get the minimum value an `int` can hold?
+a) Math.min
+b) Number.MIN_VALUE
+c) Integer.MIN_VALUE
+d) int.MIN_VALUE
+
+6. How to get the second character of `String s;`?
+a) s.get(1)
+b) s[1]
+c) s.charAt(2)
+d) s.charAt(1)
+e) s.getChar(1)
+
+7. To print a decimal number up until a certain precision, we can use:
+a) System.out.printf
+b) System.out.print
+c) System.out.println
+d) String.format then print
+
+8. How to convert a variable `x` of `int` type to a `String`?
+a) x.toString()
+b) Integer.toString(x)
+c) Integer.parseString(x)
+d) "" + x
+e) String.valueOf(x)
+
+9. What is the result of this expression in Java?
+"300" > "40"
+a) error
+b) true
+c) false
+
+ANSWERS:
+1. b
+2. b+c
+3. a
+4. b+c
+5. c
+6. d
+7. a+d
+8. b+d+e
+9. a
